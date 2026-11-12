@@ -1,4 +1,42 @@
+/*
+  WELCOME! This file, style.css, controls how the website LOOKS: colors, fonts, spacing and
+  layout. index.html holds the content and script.js holds the behavior.
+
+  CSS (Cascading Style Sheets) is made of "rules". A rule has a "selector" that says which
+  elements to style, followed by curly braces holding "declarations". Each declaration is a
+  "property" (what to change) and a "value" (what to change it to), written as property:
+  value; For example, h1 { font-size: 40px; } means "make every main heading's text 40
+  pixels tall". A pixel (px) is one tiny dot of the screen.
+
+  The main kinds of selector used below: a plain word like body matches that tag; a dot like
+  .wrap matches elements with that class; a hash like #view-rankings matches the one element
+  with that id. A space between selectors means "inside of", and a comma means "any of
+  these".
+
+  This text is a "comment". Browsers ignore it. In CSS, a comment starts with a slash and a
+  star and ends with a star and a slash.
+*/
 /* Layout: one column. Title band with two page links, then either the rankings table or a left-to-right playoff bracket. */
+/*
+  :root means the top of the page, so rules here apply everywhere. The names that start with
+  two dashes, like --bg, are "CSS variables" (also called custom properties). Each one
+  stores a value once, and the rest of the file reuses it by writing var(--bg). To change a
+  color across the whole site, you only change it here.
+
+  The colors are written as hex codes, a # followed by six letters and digits that describe
+  the amount of red, green and blue.
+
+  - --bg: the page background.
+  - --surface: the background of the table and boxes.
+  - --ink: the main text color.
+  - --muted: a softer gray-green for less important words.
+  - --line and --line-strong: thin borders; the strong one is darker and is used for the
+    bracket lines.
+  - --accent: the green used for highlights. --accent-ink is text that sits on the accent,
+    and --accent-soft is a pale green fill.
+  - --bar: the fill color of the small rating bars.
+  - --win and --loss: green and red, used for W and L.
+*/
 :root {
   --bg: #edf1ee;
   --surface: #f8faf8;
@@ -12,10 +50,25 @@
   --bar: #8fb8a4;
   --win: #1e7a4a;
   --loss: #b23a2e;
+  /*
+    The three font variables each list a first choice followed by backups (called a "font
+    stack"). If the first font cannot load, the browser tries the next one, and the last
+    word, such as sans-serif or monospace, means "any font of that general style". Display
+    is for headings, body is for regular text, and data is for numbers and small labels.
+  */
   --font-display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
   --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-data: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
+/*
+  A rule starting with @media is a "media query": its rules apply only when a condition is
+  true. This one applies when the visitor's device is set to dark mode. It gives the same
+  variable names new, darker values, so the whole site switches to dark colors without
+  changing any other rule.
+
+  :not([data-theme="light"]) means "unless the page has been forced into light mode". color-
+  scheme: dark tells the browser to draw built-in parts, like scrollbars, in dark too.
+*/
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e1713;
@@ -33,6 +86,11 @@
     color-scheme: dark;
   }
 }
+/*
+  The same dark colors again, used when the top of the page has the attribute data-
+  theme="dark". Square brackets select elements by an attribute. This site has no button
+  that sets it right now, so it is here in case you add a light and dark switch later.
+*/
 :root[data-theme="dark"] {
   --bg: #0e1713;
   --surface: #15221c;
@@ -49,7 +107,22 @@
   color-scheme: dark;
 }
 
+/*
+  The star * matches every element. box-sizing: border-box makes an element's padding (space
+  inside it) and border count toward its width, so sizes behave the way you would expect.
+*/
 * { box-sizing: border-box; }
+/*
+  body is everything visible on the page. background and color set the page color and the
+  text color, taken from the variables with var(). font-family chooses the font and font-
+  size the text size. line-height: 1.5 means each line gets 1.5 times the text height of
+  space, which is easier to read.
+
+  padding-block adds space above and below (28px at the top, 56px at the bottom). The left
+  and right padding use max(16px, env(...)), which means "at least 16px, or more if the
+  phone reports a curved corner or notch". env(safe-area-inset-left) is that reported
+  amount, and 0px is the backup value when none is reported.
+*/
 body {
   background: var(--bg);
   color: var(--ink);
@@ -60,11 +133,38 @@ body {
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
+/*
+  .wrap matches elements with class="wrap" (the dot means class). max-width stops the
+  content from growing wider than 1100px on big screens. margin: 0 auto means no space above
+  or below and automatic space left and right, which centers it.
+
+  display: flex turns on "flexbox", a layout tool that lines up the children of an element
+  in a row or a column. flex-direction: column stacks them top to bottom, and gap is the
+  space between them.
+*/
 .wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+/*
+  .view matches each of the two "pages". min-width: 0 lets the box shrink on small screens
+  instead of forcing the page to scroll sideways.
+*/
 .view { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+/*
+  The # means id, so this matches the one element with id="view-rankings". The rankings page
+  is narrower (880px) than the bracket page, which needs more room.
+*/
 #view-rankings { max-width: 880px; }
 
+/*
+  header matches the <header> tag. The title area is a column with a 10px gap between its
+  parts.
+*/
 header { display: flex; flex-direction: column; gap: 10px; }
+/*
+  "Eyebrow" is a design word for a small label above a heading. letter-spacing adds space
+  between letters. text-transform: uppercase shows the letters as capitals without changing
+  the text in the HTML. flex-wrap: wrap lets labels drop to a second line when there is not
+  enough room. align-items: center lines the items up vertically.
+*/
 .eyebrow {
   font-family: var(--font-data);
   font-size: 12px;
@@ -73,6 +173,11 @@ header { display: flex; flex-direction: column; gap: 10px; }
   color: var(--muted);
   display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
 }
+/*
+  The rounded outline around "Sample data". border draws the outline (1px thick, solid, in
+  the accent color). border-radius: 999px rounds the corners all the way. padding is the
+  space between the text and the border.
+*/
 .pill {
   border: 1px solid var(--accent);
   color: var(--accent);
@@ -80,6 +185,12 @@ header { display: flex; flex-direction: column; gap: 10px; }
   border-radius: 999px;
   letter-spacing: 0.06em;
 }
+/*
+  The main title. font-size: clamp(40px, 9vw, 64px) picks a size that grows with the window
+  (9vw is 9% of the window width) but never goes below 40px or above 64px. text-wrap:
+  balance spreads the words evenly if the title wraps onto two lines. margin: 0 removes the
+  extra space browsers add around headings by default.
+*/
 h1 {
   font-family: var(--font-display);
   font-weight: 700;
@@ -90,6 +201,9 @@ h1 {
   margin: 0;
   text-wrap: balance;
 }
+/*
+  Smaller headings for sections, such as "How ratings work" and "Playoff bracket".
+*/
 h2 {
   font-family: var(--font-display);
   font-weight: 700;
@@ -99,9 +213,24 @@ h2 {
   letter-spacing: 0.02em;
   margin: 0;
 }
+/*
+  "Lede" is a journalism word for an opening paragraph. max-width: 62ch limits the line
+  length to about 62 characters (ch is the width of the character 0), because very long
+  lines are tiring to read.
+*/
 .lede { margin: 0; color: var(--muted); max-width: 62ch; }
 
+/*
+  nav.tabs, with no space between, matches a <nav> element that also has the class tabs. The
+  bottom border draws the thin line under the tabs.
+*/
 nav.tabs { display: flex; gap: 6px; margin-top: 6px; border-bottom: 1px solid var(--line); }
+/*
+  With a space, this matches links (a) that are inside nav.tabs. text-decoration: none
+  removes the usual underline. The bottom border is 3px but transparent, so the space is
+  reserved and the tabs do not jump when the active one gets a colored underline. margin-
+  bottom: -1px nudges each tab down so its underline sits on top of the line under the tabs.
+*/
 nav.tabs a {
   font-family: var(--font-display);
   font-weight: 600;
@@ -114,13 +243,41 @@ nav.tabs a {
   border-bottom: 3px solid transparent;
   margin-bottom: -1px;
 }
+/*
+  :hover is a "pseudo-class", a rule for a special state. This one applies while the mouse
+  pointer is over the link.
+*/
 nav.tabs a:hover { color: var(--ink); }
+/*
+  script.js adds aria-current="page" to the tab for the page being shown. This rule uses
+  that attribute to turn the active tab green with a green underline.
+*/
 nav.tabs a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+/*
+  Keyboard users move around with the Tab key. :focus-visible draws an outline around
+  whatever is selected that way, so they can see where they are. It is good practice to keep
+  this. The comma means the rule applies to links and to buttons.
+*/
 a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/*
+  overflow-x: auto adds a sideways scrollbar only when the content is wider than the box.
+  border-radius rounds the corners.
+*/
 .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+/*
+  width: 100% fills the box. border-collapse: collapse merges the borders of neighboring
+  cells into single lines. min-width: 600px stops the table from squeezing narrower than
+  600px, so the box scrolls instead.
+*/
 table { width: 100%; border-collapse: collapse; min-width: 600px; }
+/*
+  The comma means these rules apply to both heading cells (th) and data cells (td). text-
+  align: right lines numbers up on the right. white-space: nowrap keeps each cell's text on
+  one line.
+*/
 th, td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+/* Heading cells get small, gray, capital letters in the monospaced font. */
 th {
   font-family: var(--font-data);
   font-size: 11px;
@@ -130,18 +287,50 @@ th {
   color: var(--muted);
   background: var(--surface);
 }
+/*
+  :nth-child(2) means the second cell in a row, which is the Team column, so team names line
+  up on the left. The next rule centers the first column (the rank) and makes it 44px wide.
+*/
 th:nth-child(2), td:nth-child(2) { text-align: left; }
 th:first-child, td:first-child { text-align: center; width: 44px; }
+/*
+  font-variant-numeric: tabular-nums makes every digit the same width, so numbers line up
+  neatly in columns.
+*/
 td { font-family: var(--font-data); font-size: 14px; font-variant-numeric: tabular-nums; }
+/*
+  td.rank means a data cell with the class rank. This rule and the next one color the rank
+  gray and give the team-name cell the regular text font, larger and bolder.
+*/
 td.rank { color: var(--muted); }
 td.team { font-family: var(--font-body); font-size: 16px; font-weight: 600; }
+/*
+  script.js gives the 24th row the class cutoff. This draws a thick green line under it,
+  showing where the playoff cutoff is.
+*/
 tr.cutoff td { border-bottom: 2px solid var(--accent); }
+/*
+  :last-of-type means the last of its kind. The last row loses its bottom border so it does
+  not double up with the box's own border.
+*/
 tbody tr.row:last-of-type td { border-bottom: 0; }
+/*
+  Each team name is a button, so keyboard and screen-reader users can open it. These rules
+  remove the default button look. font: inherit makes the button use the surrounding font.
+  background: none and border: 0 remove the gray button box. cursor: pointer shows a hand
+  when hovering. inline-flex lays out the arrow and the name side by side.
+*/
 .team-btn {
   font: inherit; font-weight: 600; color: var(--ink);
   background: none; border: 0; padding: 0; cursor: pointer;
   display: inline-flex; align-items: center; gap: 8px; text-align: left;
 }
+/*
+  ::before is a "pseudo-element": a decoration the browser draws just before an element's
+  content, without any extra HTML. content: "" is required to make it appear. Here it makes
+  a small arrow: a tiny square with only two of its borders drawn, then rotated by -45
+  degrees so it points right. transition makes the turn animate smoothly over 0.15 seconds.
+*/
 .team-btn::before {
   content: "";
   width: 7px; height: 7px;
@@ -149,27 +338,83 @@ tbody tr.row:last-of-type td { border-bottom: 0; }
   transform: rotate(-45deg);
   transition: transform 0.15s;
 }
+/*
+  When a button's aria-expanded is "true" (its game list is open), the arrow turns to point
+  down.
+*/
 .team-btn[aria-expanded="true"]::before { transform: rotate(45deg); }
+/*
+  Holds the little bar and the rating number side by side. justify-content: flex-end pushes
+  them to the right edge of the cell.
+*/
 .rating-cell { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+/*
+  The gray track behind the colored bar. overflow: hidden trims anything that sticks out.
+  flex: none stops it from shrinking.
+*/
 .bar { width: 64px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; flex: none; }
+/*
+  The > symbol means "direct child". This is the filled part of the bar. script.js sets its
+  width as a percentage, so a higher-rated team gets a longer bar.
+*/
 .bar > span { display: block; height: 100%; background: var(--bar); }
+/* min-width: 6ch keeps the numbers a steady width so the bars line up. */
 .rating-num { min-width: 6ch; font-weight: 500; }
+/* Small gray text used for the notes under the table and under the bracket. */
 .note { margin: 0; font-size: 14px; color: var(--muted); }
+/*
+  A short green line, a sample of the cutoff line, shown inside the note under the table.
+  vertical-align: middle lines it up with the text.
+*/
 .note .swatch { display: inline-block; width: 22px; border-top: 2px solid var(--accent); vertical-align: middle; margin-right: 6px; }
 
+/*
+  This is the extra row that lists a team's games. It only exists while a team is open,
+  because script.js adds it then. white-space: normal lets text wrap again. It overrides the
+  earlier no-wrap rule because this selector is more specific. (When two rules clash, the
+  more specific one wins. That is the "cascading" in CSS.)
+*/
 tr.log td { padding: 0; background: var(--bg); text-align: left; white-space: normal; }
+/*
+  padding with four numbers means top, right, bottom, left (clockwise, starting from the
+  top). The big left padding lines the list up under the team name.
+*/
 .log-inner { padding: 12px 16px 14px 56px; }
 .log-title { font-family: var(--font-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+/*
+  display: grid uses "grid" layout, which arranges items in rows and columns. repeat(auto-
+  fill, minmax(230px, 1fr)) means "make as many columns as will fit, each at least 230px
+  wide, sharing the leftover space equally" (1fr is one share). list-style: none removes the
+  bullet points.
+*/
 .log-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 20px; }
+/*
+  Each game line is its own little grid with four columns: the date (52px), the W or L
+  letter (18px), the opponent (1fr, which takes the space that is left) and the score (auto,
+  which is just as wide as it needs to be). align-items: baseline lines up the text.
+*/
 .log-list li { font-family: var(--font-data); font-size: 13px; display: grid; grid-template-columns: 52px 18px 1fr auto; gap: 8px; align-items: baseline; min-width: 0; }
+/*
+  .d is the date, in gray. .o is the opponent's name: text-overflow: ellipsis shows ... when
+  a name is too long to fit, and overflow: hidden cuts off the rest.
+*/
 .log-list .d { color: var(--muted); }
 .log-list .o { font-family: var(--font-body); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* res-w and res-l are the W and L letters, in green and red from the variables. */
 .res-w { color: var(--win); font-weight: 500; }
 .res-l { color: var(--loss); font-weight: 500; }
 
+/*
+  The "How ratings work" box is styled like a card: a light background, a thin border,
+  rounded corners and inner padding. Its contents are stacked in a column.
+*/
 .method { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
 .method h2 { font-size: 24px; }
 .method p { margin: 0; max-width: 68ch; }
+/*
+  The formula box. overflow-x: auto adds a sideways scrollbar if a line is too long for the
+  screen.
+*/
 .formula {
   font-family: var(--font-data);
   font-size: 14px;
@@ -181,59 +426,148 @@ tr.log td { padding: 0; background: var(--bg); text-align: left; white-space: no
 }
 .method .small { font-size: 14px; color: var(--muted); }
 
+/*
+  The next rules draw the playoff bracket. It is built from boxes inside boxes: each match
+  box has its feeder matches (the ones that lead into it) to its left, and thin lines join
+  them. The lines are not images. They are the borders of empty pseudo-elements, placed with
+  position: relative on a parent and position: absolute on the line (an absolutely
+  positioned item sits at exact spots measured from its nearest positioned parent).
+*/
 /* Bracket: each match sits to the right of the two matches that feed it. */
+/* The scrollable box around the bracket, like .table-scroll is for the table. */
 .bracket-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); padding: 16px 20px 20px; }
+/*
+  width: max-content makes the box as wide as the bracket needs, so the bracket is never
+  squeezed.
+*/
 .bracket-inner { width: max-content; }
+/*
+  The row of column titles (Round 1, Round 2 and so on). Each title is 238px wide, which is
+  a 210px match box plus a 28px gap, so the titles line up with the columns.
+*/
 .round-heads { display: flex; margin-bottom: 8px; }
 .round-heads span {
   width: 238px; flex: none;
   font-family: var(--font-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
 }
+/*
+  The whole bracket. It is drawn from the final backwards: each match sits to the right of
+  the matches that feed it. align-items: center places each match halfway between the two
+  matches that lead to it.
+*/
 .tree { display: flex; align-items: center; }
+/*
+  A node is one match together with the earlier matches feeding into it, which sit to its
+  left.
+*/
 .node { display: flex; align-items: center; padding-block: 5px; }
+/*
+  The group of earlier matches (one or two) that feed the next match, stacked in a column.
+  margin-right leaves room for the connector lines.
+*/
 .feeders { display: flex; flex-direction: column; position: relative; margin-right: 28px; }
+/* flex: 1 gives each feeder an equal share of the height. */
 .feeders > .node { flex: 1; }
+/*
+  Draws the vertical line that joins two feeder matches. It runs from the middle of the top
+  match to the middle of the bottom one (top: 25%; height: 50%). :not(.single) skips this
+  when there is only one feeder, which happens when a top seed has a bye (skips round 1).
+*/
 .feeders:not(.single)::after {
   content: ""; position: absolute; right: -14px; top: 25%; height: 50%;
   border-left: 1px solid var(--line-strong);
 }
+/*
+  The box for one game, holding two team rows. overflow: hidden keeps the rows inside the
+  rounded corners.
+*/
 .match {
   position: relative; width: 210px; flex: none;
   border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg); overflow: hidden;
 }
+/*
+  A short horizontal line coming out of the right side of each feeder match. left: 100%
+  starts the line at the box's right edge.
+*/
 .feeders > .node > .match::after {
   content: ""; position: absolute; left: 100%; top: 50%; width: 14px;
   border-top: 1px solid var(--line-strong);
 }
+/*
+  The + symbol means "directly after". This matches a match box that follows a .feeders
+  group, and draws the short line entering it from the left. right: 100% ends the line at
+  the box's left edge.
+*/
 .feeders + .match::before {
   content: ""; position: absolute; right: 100%; top: 50%; width: 14px;
   border-top: 1px solid var(--line-strong);
 }
+/*
+  One team's row inside a match, a grid with three columns: the seed number (24px), the team
+  name (minmax(0, 1fr) takes the leftover space but is allowed to shrink) and the score
+  (auto).
+*/
 .slot { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 6px; align-items: center; padding: 0 8px; height: 29px; color: var(--muted); }
+/*
+  The second team row in a match gets a thin line on top, which separates the two teams.
+*/
 .slot + .slot { border-top: 1px solid var(--line); }
+/*
+  Small pieces of a row: .seed is the seed number, .nm is the team name (with ... if it is
+  too long) and .sc is the score.
+*/
 .slot .seed { font-family: var(--font-data); font-size: 11px; }
 .slot .nm { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .slot .sc { font-family: var(--font-data); font-size: 13px; font-variant-numeric: tabular-nums; }
+/*
+  .slot.w, with no space, matches an element that has both the classes slot and w. script.js
+  adds w to the winning team's row, so it gets darker bold text and a pale green background.
+*/
 .slot.w { color: var(--ink); font-weight: 600; background: var(--accent-soft); }
+/*
+  The champion box at the far right, with a thicker 2px green border to make it stand out.
+*/
 .champion {
   position: relative; margin-left: 28px; width: 210px; flex: none;
   border: 2px solid var(--accent); border-radius: 4px; background: var(--accent-soft); padding: 10px 12px;
 }
+/* The short line joining the final match to the champion box. */
 .champion::before {
   content: ""; position: absolute; right: 100%; top: 50%; width: 28px;
   border-top: 1px solid var(--line-strong);
 }
+/*
+  The champion box has three lines of text: .lab is the small "Champion" label, .big is the
+  team name in large letters and .sub is the seed line.
+*/
 .champion .lab { font-family: var(--font-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .champion .big { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.05; text-transform: uppercase; }
 .champion .sub { font-family: var(--font-data); font-size: 12px; color: var(--muted); }
 
+/*
+  Another media query. It applies only when the window is 520px wide or narrower, like most
+  phones. There is less room, so the game list gets a smaller left padding.
+*/
 @media (max-width: 520px) {
   .log-inner { padding-left: 16px; }
 }
+/*
+  Some people set their device to reduce animation, for example because motion makes them
+  feel unwell. For them, this turns off the arrow's turning animation.
+*/
 @media (prefers-reduced-motion: reduce) {
   .team-btn::before { transition: none; }
 }
 
+/*
+  A "reset" cancels some of the browser's built-in default styles so the page looks the same
+  everywhere. :root { color-scheme: light; } sets built-in parts such as scrollbars to light
+  by default. The dark rules above still win because their selectors are more specific. body
+  { margin: 0 } removes the small gap browsers add around the page. img { max-width: 100% }
+  stops any image from being wider than its box (this site has no images yet). The last rule
+  keeps anything with the hidden attribute hidden: !important makes a rule beat other rules,
+  so the bracket section stays hidden until its tab is chosen.
+*/
 /* Basic page reset */
 :root { color-scheme: light; }
 body { margin: 0; }

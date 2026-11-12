@@ -1,31 +1,152 @@
 <!doctype html>
+<!--
+  WELCOME! This file, index.html, is the front door of the website. The site is made of
+  three files that work as a team, and all three must sit in the same folder with exactly
+  these names:
+
+  - index.html (this file) holds the CONTENT: the words, the table, the tabs, and how they
+    are organized.
+  - style.css holds the LOOK: colors, fonts, spacing and layout.
+  - script.js holds the BEHAVIOR: the math that ranks the teams, drawing the table and
+    bracket, and switching between pages.
+
+  HTML (HyperText Markup Language) is the language that describes what is on a web page. You
+  write it with "tags", which are words inside angle brackets, such as <p> for a paragraph.
+  Most tags come in pairs: an opening tag <p> and a closing tag </p> (note the slash). The
+  opening tag, the closing tag and everything between them together are called an "element".
+  Elements can sit inside other elements, like boxes inside boxes. An opening tag can also
+  carry "attributes", extra settings written inside it, like class="wrap" or id="rows".
+
+  The very first line, doctype, tells the browser that this is a modern HTML5 page.
+
+  This text is a "comment". Browsers skip comments completely. They exist only to help
+  humans read the code.
+-->
 <html lang="en">
+<!--
+  The <html> tag above wraps the entire page. lang="en" says the page is written in English,
+  which helps screen readers (software that reads pages aloud for people who are blind or
+  have low vision) pick the right pronunciation.
+
+  Next comes <head>. The head holds setup information about the page. Nothing inside the
+  head is shown on the page itself.
+-->
 <head>
+<!--
+  "meta" tags give the browser information about the page. charset="utf-8" names the
+  character encoding (the code that turns stored data into letters). UTF-8 covers nearly
+  every letter and symbol, so characters like the minus sign and the middle dot display
+  correctly.
+-->
 <meta charset="utf-8">
+<!--
+  This makes the page fit phones. Without it, many phones pretend to be a wide desktop
+  screen and shrink the whole page. width=device-width means "use the phone's real screen
+  width".
+-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  The title is the text shown on the browser tab, in search results and in bookmarks.
+-->
 <title>Oregon Lacrosse Rankings</title>
+<!--
+  A <link> tag connects this page to another file or web address. rel says what the
+  connection is for, and href says where to find it. These two "preconnect" lines are a
+  small speed-up: they tell the browser to start contacting Google's font servers right away
+  so the fonts arrive sooner.
+-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--
+  This downloads three fonts from Google Fonts: Barlow Condensed (headings), Source Sans 3
+  (regular text) and IBM Plex Mono (numbers and small labels). The fonts come from the
+  internet, so the visitor needs a connection to see them. If a font cannot load, the
+  browser uses a backup font listed in style.css. display=swap means "show the text right
+  away in a backup font, then swap in the real font when it arrives".
+-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<!--
+  This connects our own style sheet. href="style.css" is a "relative" address: it means "the
+  file named style.css in the same folder as this page". rel="stylesheet" says the file
+  contains CSS (the language that controls how a page looks). Without this line the page
+  would still show its content, but it would look plain.
+-->
 <link rel="stylesheet" href="style.css">
 </head>
+<!--
+  </head> ends the setup section. <body> starts everything that is visible on the page.
+-->
 <body>
+<!--
+  div is a generic box used to group other elements. It means nothing by itself.
+  class="wrap" is a label (a "class") that CSS uses to find this element and style it. Here,
+  style.css uses it to center the content and stop it from getting too wide. This box closes
+  with the matching </div> near the bottom of the file, so everything in between sits inside
+  it.
+-->
 <div class="wrap">
+  <!--
+    header is the top area of the page. It holds a small label line, the big title and the
+    two tab links.
+  -->
   <header>
+    <!--
+      A small line of labels above the title. span is a tiny container for a piece of text
+      inside a line, used so CSS can space the labels out. The "Sample data" label is a
+      reminder that the teams and scores are made up.
+    -->
     <div class="eyebrow"><span>Boys varsity</span><span>2026 season</span><span class="pill">Sample data</span></div>
+    <!--
+      h1 is the main heading of the page, the most important title. A page should have just
+      one. (h2, h3 and so on are smaller headings for sections.)
+    -->
     <h1>Oregon Lacrosse Rankings</h1>
+    <!--
+      nav holds navigation links. aria-label is a hidden description that only screen
+      readers use, so they can announce this group as "Pages".
+
+      The two links use addresses that start with #, such as #bracket. An address like that
+      points to a spot on the SAME page and changes only the end of the web address.
+      script.js watches for that change and shows the matching part of the page. The id
+      attribute gives each link a unique name so script.js can find it and highlight the
+      active tab.
+    -->
     <nav class="tabs" aria-label="Pages">
       <a href="#rankings" id="tab-rankings">Rankings</a>
       <a href="#bracket" id="tab-bracket">Playoff bracket</a>
     </nav>
   </header>
 
+  <!--
+    section is a major block of the page. This one is the Rankings "page". The website is
+    really one HTML file with two sections, and only one is visible at a time. An id is a
+    unique name for a single element (unlike a class, which many elements can share).
+    script.js uses this id to show or hide the section.
+  -->
   <section class="view" id="view-rankings">
+    <!-- p means paragraph. This is the short introduction under the tabs. -->
     <p class="lede">Teams are rated by how many goals they beat opponents by and how strong those opponents are. Tap a team to see its games.</p>
+    <!--
+      This box lets the table scroll sideways on a small screen instead of squeezing the
+      columns or stretching the whole page.
+    -->
     <div class="table-scroll">
+      <!--
+        table creates a grid of rows and columns. Inside it, thead is the group of heading
+        rows, tbody is the group of body rows, tr is one row, th is a heading cell and td is
+        a regular data cell.
+      -->
       <table>
         <thead>
           <tr>
+            <!--
+              The column headings. # is the team's rank. W-L is wins and losses. GF-GA is
+              goals for and goals against. AGD is average goal differential, which is each
+              game's result (based on the goal margin) averaged over the season. Sched is
+              strength of schedule, meaning how good the opponents were. Rating is the
+              team's overall score. scope="col" tells screen readers that each heading
+              describes a column.
+            -->
             <th scope="col">#</th>
             <th scope="col">Team</th>
             <th scope="col">W-L</th>
@@ -35,30 +156,69 @@
             <th scope="col">Rating</th>
           </tr>
         </thead>
+        <!--
+          This table body is empty on purpose. script.js builds one row per team from the
+          game results and puts the rows in here when the page loads. The id lets script.js
+          find this spot.
+        -->
         <tbody id="rows"></tbody>
       </table>
     </div>
+    <!--
+      A note under the table. CSS draws a thick green line under the 24th team, and the
+      little span with the class swatch draws a small sample of that line so the note makes
+      sense. aria-hidden="true" hides the decorative sample from screen readers.
+    -->
     <p class="note"><span class="swatch" aria-hidden="true"></span>The top 24 teams above this line make the playoffs.</p>
 
+    <!--
+      A box that explains how the ratings are worked out, for visitors who are curious. h2
+      is a second-level heading.
+    -->
     <section class="method">
       <h2>How ratings work</h2>
       <p>Each team's rating is its average result plus the average rating of the teams it played. Because opponents' ratings depend on their own opponents, the page repeats the calculation until the numbers settle.</p>
+      <!--
+        The formula is shown in a monospaced font (every letter has the same width). <br>
+        forces a line break.
+      -->
       <div class="formula">Rating = AGD + Sched<br>AGD = each game's result, based on goal margin (capped at 10), averaged over the season<br>Sched = average rating of opponents</div>
       <p>Ratings are relative, so a gap of 1.0 between two teams means roughly a one-goal edge. A game is skipped when two teams are more than 10 goals apart and the stronger team wins by 10 or more.</p>
       <p class="small">The teams and scores on this page are sample data for a demo.</p>
     </section>
+  <!-- This closes the Rankings section. -->
   </section>
 
+  <!--
+    The second "page": the playoff bracket. The attribute hidden hides this section when the
+    page first loads, so visitors see the rankings first. script.js removes the attribute
+    when someone clicks the Playoff bracket tab.
+  -->
   <section class="view" id="view-bracket" hidden>
     <h2>Playoff bracket</h2>
     <p class="lede">The top 24 teams in the rankings, seeded by rating. Seeds 1 through 8 get a first-round bye. All scores here are made up for the sample.</p>
+    <!--
+      A box that scrolls sideways, because the bracket is wider than most screens.
+      tabindex="0" lets keyboard users select the box and scroll it with the arrow keys.
+      role="region" and aria-label tell screen readers what this area is.
+    -->
     <div class="bracket-scroll" tabindex="0" role="region" aria-label="Playoff bracket, scrolls sideways">
+      <!--
+        Empty on purpose, like the table body. script.js draws the whole bracket in here.
+      -->
       <div class="bracket-inner" id="bracket"></div>
     </div>
     <p class="note">On a small screen, swipe the bracket sideways to follow a team's path.</p>
   </section>
+<!-- This closes the wrap box that opened near the top of the body. -->
 </div>
 
+<!--
+  This loads script.js. JavaScript is the programming language that makes web pages do
+  things. The src attribute names the file, which sits in the same folder. The script tag is
+  placed last on purpose: script.js looks for elements such as the empty table body by their
+  ids, so those elements must already exist when it runs.
+-->
 <script src="script.js"></script>
 </body>
 </html>
